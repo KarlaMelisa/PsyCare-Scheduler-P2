@@ -1,6 +1,7 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.event.*;
 import java.time.LocalDate;
 
 public class Ventana {
@@ -16,16 +17,20 @@ public class Ventana {
     private JTextField textNuevoTelefono;
     private JTextField txtNuevoEmail;
     private JButton btnActualizarPaciente;
-    private JTextField txtPacienteEliminar;
+    private JTextArea txtPacienteEliminar;
     private JButton btnEliminar;
     private JButton btnAgregarPaciente;
     private JComboBox cbMes;
     private JComboBox cbDia;
     private JComboBox cbAnio;
+    private JLabel lbNombreEditado;
+    private JTextField txtNombreEditado;
+    private boolean dobleClick = false;
+    private Paciente seleccionado;
     Psicologo psicologo = new Psicologo(001, "MISHELL GUZMAN", "casafeliz123", "PSICOLOGO/A", "COGNITIVO CONDUCTUAL", "AB379221");
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Ventana");
+        JFrame frame = new JFrame("Psycare Scheduler");
         frame.setContentPane(new Ventana().principal);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -40,6 +45,11 @@ public class Ventana {
         cbAnio.setSelectedIndex(1);
         cbDia.setSelectedIndex(1);
         cbMes.setSelectedIndex(1);
+    }
+
+    public void limpiarEdicion() {
+        textNuevoTelefono.setText("");
+        txtNuevoEmail.setText("");
     }
 
     public Ventana() {
@@ -84,6 +94,82 @@ public class Ventana {
                 JOptionPane.showMessageDialog(null, "Paciente agregado exitosamente");
                 limpiarRegistro();
             }
+
         });
+        btnMostrarPacientes.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultListModel d= crearDlm();
+                listPacientes.setModel(d);
+            }
+        });
+        btnActualizarPaciente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Paciente paciente = (Paciente) listPacientes.getSelectedValue();
+                String telefono = (String) textNuevoTelefono.getText().trim();
+                String email = (String) txtNuevoEmail.getText().trim();
+                if (paciente == null) {
+                    JOptionPane.showMessageDialog(null, "No hay paciente seleccionado");
+                    return;
+                }
+                paciente.setEmail(email);
+                if (!telefono.isEmpty()) {
+                    paciente.setTelefono(telefono);
+                }
+                if (!email.isEmpty()){
+                    paciente.setEmail(email);
+                }
+                JOptionPane.showMessageDialog(null, "Paciente modificado con éxito");
+                limpiarEdicion();
+            }
+        });
+        listPacientes.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                Paciente paciente= (Paciente) listPacientes.getSelectedValue();
+                lbNombreEditado.setText(paciente.getNombre());
+            }
+        });
+        listPacientes.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    seleccionado= (Paciente) listPacientes.getSelectedValue();
+                    if (seleccionado != null){
+                        txtPacienteEliminar.setText(seleccionado.toString());
+                        dobleClick = true;
+                    }
+                }
+            }
+        });
+        btnEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultListModel d= crearDlm();
+                int index = listPacientes.getSelectedIndex();
+                if (!dobleClick || seleccionado == null) {
+                    JOptionPane.showMessageDialog(null, "Seleccionar paciente con doble clic.");
+                    return;
+                }
+                seleccionado = (Paciente) listPacientes.getSelectedValue();
+                int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar al paciente " + seleccionado.getNombre() + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    d.remove(index);
+                    psicologo.getPacientes().remove(seleccionado);
+                        JOptionPane.showMessageDialog(null, "Paciente eliminado exitosamente");
+                    }
+                txtPacienteEliminar.setText("");
+                dobleClick = false;
+            }
+        });
+
+    }
+    public DefaultListModel crearDlm(){
+        DefaultListModel dlm = new DefaultListModel();
+        for (Paciente p : psicologo.getPacientes()) {
+            dlm.addElement(p);
+        }
+        return dlm;
     }
 }

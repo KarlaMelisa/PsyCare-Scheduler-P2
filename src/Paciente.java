@@ -75,9 +75,9 @@ public class Paciente {
     @Override
     public String toString() {
         return "\nPaciente " + idPaciente +
-                "\nNombre: " + nombre +
-                "\nTelefono: " + telefono +
-                "\nEmail: " + email +
-                "\nFecha de nacimiento: " + fechaNacimiento;
+                "\n Nombre: " + nombre +
+                "\n Telefono: " + telefono +
+                "\n Email: " + email +
+                "\n Fecha de nacimiento: " + fechaNacimiento;
     }
 }
