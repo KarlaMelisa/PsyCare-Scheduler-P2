@@ -3,14 +3,24 @@ import java.time.LocalDateTime;
 public class Cita {
     private int idCita;
     private LocalDateTime fechaHora;
-    private String estado;
+    //private String estado;
     private String motivo;
+    private Paciente paciente;
 
-    public Cita(int idCita, LocalDateTime fechaHora, String estado, String motivo) {
+    public Cita(int idCita, LocalDateTime fechaHora, String motivo, Paciente paciente) {
         this.idCita = idCita;
         this.fechaHora = fechaHora;
-        this.estado = estado;
+        //this.estado = "CONFIRMADA";
         this.motivo = motivo;
+        this.paciente = paciente;
+    }
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
     }
 
     public int getIdCita() {
@@ -29,14 +39,6 @@ public class Cita {
         this.fechaHora = fechaHora;
     }
 
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
     public String getMotivo() {
         return motivo;
     }
@@ -47,21 +49,13 @@ public class Cita {
 
     public void reprogramar(LocalDateTime nuevaFecha){
         this.fechaHora= nuevaFecha;
-        this.estado= "REPROGRAMADA";
     }
 
-    public void cancelar(){
-        this.estado= "CANCELADA";
-    }
-
-    public void completar(){
-        this.estado= "COMPLETADA";
-    }
     @Override
     public String toString() {
-        return "\nCita " + idCita +
-                "\nFecha y hora: " + fechaHora +
-                "\nEstado: " + estado +
-                "\nMotivo: " + motivo;
+        return "Cita " + idCita +
+                "\n   Fechay hora: " + fechaHora +
+                "\n   Motivo: " + motivo +
+                "\n   Paciente" + paciente;
     }
 }

@@ -59,11 +59,6 @@ public class Paciente {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public void actualizarDatos(String telefono, String email){
-        this.telefono = telefono;
-        this.email = email;
-    }
-
     public ArrayList<Cita> verHistorial(){
         return citas;
     }
@@ -75,9 +70,9 @@ public class Paciente {
     @Override
     public String toString() {
         return "\nPaciente " + idPaciente +
-                "\n Nombre: " + nombre +
-                "\n Telefono: " + telefono +
-                "\n Email: " + email +
-                "\n Fecha de nacimiento: " + fechaNacimiento;
+                "\n   Nombre: " + nombre +
+                "\n   Telefono: " + telefono +
+                "\n   Email: " + email +
+                "\n   Fecha de nacimiento: " + fechaNacimiento;
     }
 }
